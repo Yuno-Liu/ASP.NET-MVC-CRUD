@@ -19,7 +19,5 @@ public class Product
     [Range(1, 10000, ErrorMessage = "價格限制為1~10000元")]
     public double Price { get; set; }
 
-    [Display(Name = "價格")]
-    [ValidateNever]
-    public string? ImageUrl { get; set; }
+    [Display(Name = "圖片")] [ValidateNever] public string? ImageUrl { get; set; }
 }
