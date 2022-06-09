@@ -89,7 +89,8 @@ namespace FoodWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ImageUrl")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ImageUrl")] Product product,
+            IFormFile file)
         {
             if (id != product.Id)
             {
@@ -100,6 +101,8 @@ namespace FoodWeb.Controllers
             {
                 try
                 {
+                    if (file != null)
+                        CreateImageToLocal(ref product, file);
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
