@@ -14,8 +14,10 @@
 - [x] 在 MSSQL 建立新資料庫。
 - [x] 創建 ApplicationDbContext.cs 進行 Core frist 建立資料表。
 - [x] 創建商品 CRUD View、Controller。
-- [ ] 新增查詢商品頁面及功能
-- [ ] 新增上架商品頁面及功能
-- [ ] 新增修改商品頁面及功能
-- [ ] 新增刪除商品頁面及功能
-- [ ] 新增上傳圖片功能。
+- [x] 新增查詢商品頁面及功能
+- [x] 新增上架商品頁面及功能
+- [x] 新增修改商品頁面及功能
+- [x] 新增刪除商品頁面及功能
+- [x] 新增上傳圖片功能。
+
+![image](https://github.com/Yuno-Liu/ASP.NET-MVC-CRUD/blob/main/20220609142536.png)
