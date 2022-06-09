@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using FoodWeb.Data;
+﻿using FoodWeb.Data;
 using FoodWeb.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodWeb.Controllers
 {
@@ -14,9 +9,12 @@ namespace FoodWeb.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public ProductsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Products
@@ -56,10 +54,13 @@ namespace FoodWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ImageUrl")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ImageUrl")] Product product,
+            IFormFile file)
         {
             if (ModelState.IsValid)
             {
+                if (file != null)
+                    CreateImageToLocal(ref product, file);
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -158,6 +159,33 @@ namespace FoodWeb.Controllers
         private bool ProductExists(int id)
         {
           return (_context.Product?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        /// <summary>
+        ///     將圖片放到指定路徑，並將路徑資訊傳回product.ImageUrl
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="file"></param>
+        private void CreateImageToLocal(ref Product product, IFormFile file)
+        {
+            var wwwRootPath = _webHostEnvironment.WebRootPath;
+            var fileName = Guid.NewGuid().ToString();
+            var upload = Path.Combine(wwwRootPath, @"images\products");
+            var extension = Path.GetExtension(file.FileName);
+
+            // 判斷圖片是否已存在
+            if (product.ImageUrl != null)
+            {
+                var oldImagePath = Path.Combine(wwwRootPath, product.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath)) System.IO.File.Delete(oldImagePath);
+            }
+
+            using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+            }
+
+            product.ImageUrl = @"\images\products\" + fileName + extension;
         }
     }
 }
