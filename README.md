@@ -8,8 +8,8 @@
 
 ## 開發進度
 
-- [ ] 創建初始 MVC。
-- [ ] 商品 Model 建立。
+- [x] 創建初始 MVC。
+- [x] 商品 Model 建立。
 - [ ] 在 appsettings.json 建立資料庫連線，並在 Program.cs 建立依賴注入。
 - [ ] 在 MSSQL 建立新資料庫。
 - [ ] 創建 ApplicationDbContext.cs 進行 Core frist 建立資料表。
